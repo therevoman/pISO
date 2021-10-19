@@ -1,4 +1,4 @@
 
 [submodule "buildroot"]
 	path = buildroot
-	url = https://github.com/ALSchwalm/buildroot
+	url = https://github.com/therevoman/buildroot

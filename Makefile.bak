@@ -7,7 +7,7 @@ test:
 
 .PHONY: test-ci
 test-ci:
-	podman run --rm \
+	docker run --rm \
 		-e CARGO_HOME='$(CARGO_HOME)'\
 		--user $(CURRENT_USER):$(CURRENT_GROUP) \
 		-v "$(PWD)":$(PWD) -w $(PWD)/pISO rust:1 cargo test
@@ -15,11 +15,11 @@ test-ci:
 .PHONY: sdimage
 sdimage: update-config
 ifeq ("$(shell ./scripts/should-rebuild)","rebuild")
-	sudo podman run --net=host -v $(CURDIR):/pISO -w /pISO/buildroot \
+	sudo docker run -v $(CURDIR):/pISO -w /pISO/buildroot \
 			--user $(CURRENT_USER):$(CURRENT_GROUP) \
 			--rm  adamschwalm/piso:latest /bin/bash -c "make clean && make"
 else
-	sudo podman run --net=host -v $(CURDIR):/pISO -w /pISO/buildroot \
+	sudo docker run -v $(CURDIR):/pISO -w /pISO/buildroot \
 			--user $(CURRENT_USER):$(CURRENT_GROUP) \
 			--rm  adamschwalm/piso:latest /bin/bash -c "make piso-reconfigure && make"
 endif
@@ -30,11 +30,11 @@ sdimage-ci: update-config
 	chmod +x buildroot/board/piso/post-build.sh
 	chmod +x buildroot/board/piso/post-image.sh
 ifeq ("$(shell ./scripts/should-rebuild)","rebuild")
-	podman run -v $(CURDIR):/pISO -w /pISO/buildroot \
+	docker run -v $(CURDIR):/pISO -w /pISO/buildroot \
 			--user $(CURRENT_USER):$(CURRENT_GROUP) \
 			--rm  adamschwalm/piso:latest /bin/bash -c "make clean && make"
 else
-	podman run -v $(CURDIR):/pISO -w /pISO/buildroot \
+	docker run -v $(CURDIR):/pISO -w /pISO/buildroot \
 			--user $(CURRENT_USER):$(CURRENT_GROUP) \
 			--rm  adamschwalm/piso:latest /bin/bash -c "make piso-reconfigure && make"
 endif
